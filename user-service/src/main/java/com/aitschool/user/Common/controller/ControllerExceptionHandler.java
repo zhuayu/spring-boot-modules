@@ -2,19 +2,13 @@ package com.aitschool.user.Common.controller;
 
 import com.aitschool.user.Common.exception.BusinessException;
 import com.aitschool.user.Common.response.CommonResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -22,7 +16,6 @@ public class ControllerExceptionHandler {
 
     /**
      * 所有异常统一处理
-     *
      * @param e
      * @return
      */
@@ -53,7 +46,6 @@ public class ControllerExceptionHandler {
 
     /**
      * 404 资源
-     *
      * @param e
      * @return
      */
@@ -72,23 +64,12 @@ public class ControllerExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(value = BindException.class)
-    @ResponseBody
-    public CommonResponse bindExceptionHandler(BindException e) {
-        CommonResponse commonResp = new CommonResponse();
-        LOG.error("校验异常 BIND：{}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
-        commonResp.setError_code(1);
-        commonResp.setMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
-        return commonResp;
-    }
-
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public CommonResponse handleValidationExceptions(
             MethodArgumentNotValidException e) {
         CommonResponse commonResp = new CommonResponse();
-        LOG.error("校验异常 METHOD：{}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        LOG.error("校验异常：{}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         commonResp.setError_code(1);
         commonResp.setMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         return commonResp;

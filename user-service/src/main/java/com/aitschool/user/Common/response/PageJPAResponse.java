@@ -1,7 +1,6 @@
 package com.aitschool.user.Common.response;
 
 import lombok.Data;
-
 import java.util.List;
 
 @Data
@@ -11,7 +10,6 @@ public class PageJPAResponse<T> {
     private int error_code;
     private String message;
 
-    // Inner class for pagination details
     @Data
     public static class Pagination {
         private long total;
@@ -21,7 +19,6 @@ public class PageJPAResponse<T> {
         private int total_pages;
     }
 
-    // Static factory method to create and initialize the instance
     public static <T> PageJPAResponse<T> of(List<T> list, long totalElements, int numberOfElements,
                                             int size, int number, int totalPages) {
         PageJPAResponse<T> response = new PageJPAResponse<>();
