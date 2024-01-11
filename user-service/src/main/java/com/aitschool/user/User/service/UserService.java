@@ -1,8 +1,8 @@
 package com.aitschool.user.User.service;
 
-import com.aitschool.user.Common.exception.BusinessException;
-import com.aitschool.user.Common.response.CommonResponse;
-import com.aitschool.user.Common.response.PageJPAResponse;
+import com.aitschool.common.exception.BusinessException;
+import com.aitschool.common.response.CommonResponse;
+import com.aitschool.common.response.PageJPAResponse;
 import com.aitschool.user.User.User;
 import com.aitschool.user.User.UserRepository;
 import com.aitschool.user.User.request.UserStoreRequest;

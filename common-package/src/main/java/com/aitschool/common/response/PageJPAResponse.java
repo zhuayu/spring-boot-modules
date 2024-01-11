@@ -1,4 +1,4 @@
-package com.aitschool.user.Common.response;
+package com.aitschool.common.response;
 
 import lombok.Data;
 import java.util.List;

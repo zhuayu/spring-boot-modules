@@ -1,4 +1,4 @@
-package com.aitschool.user.Common.aspect;
+package com.aitschool.common.aspect;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.PropertyPreFilters;

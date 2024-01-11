@@ -1,4 +1,4 @@
-package com.aitschool.user.Common.exception;
+package com.aitschool.common.exception;
 
 public class BusinessException extends RuntimeException {
 

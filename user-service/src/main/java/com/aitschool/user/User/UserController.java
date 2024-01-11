@@ -1,7 +1,7 @@
 package com.aitschool.user.User;
 
-import com.aitschool.user.Common.response.CommonResponse;
-import com.aitschool.user.Common.response.PageJPAResponse;
+import com.aitschool.common.response.CommonResponse;
+import com.aitschool.common.response.PageJPAResponse;
 import com.aitschool.user.User.request.UserStoreRequest;
 import com.aitschool.user.User.response.UserIndexResponse;
 import com.aitschool.user.User.service.UserService;

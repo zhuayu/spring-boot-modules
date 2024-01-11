@@ -1,7 +1,7 @@
-package com.aitschool.user.Common.controller;
+package com.aitschool.common.controller;
 
-import com.aitschool.user.Common.exception.BusinessException;
-import com.aitschool.user.Common.response.CommonResponse;
+import com.aitschool.common.exception.BusinessException;
+import com.aitschool.common.response.CommonResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
