@@ -8,21 +8,31 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class Jwt {
+
     private static final Logger LOG = LoggerFactory.getLogger(Jwt.class);
 
-    private static final String key = "born2code"; // key 之后需要放到 env
+    @Value("${jwt.secret}")
+    private String key;
 
-    public static String createToken(long id) {
-        return createToken(id, "web", false);
+    private void setKey(String key) {
+        this.key = key;
     }
 
-    public static String createToken(long id, String platform, boolean remember) {
+    public String encode(long id) {
+        return encode(id, "web", false);
+    }
+
+    public String encode(long id, String platform, boolean remember) {
         LOG.info("开始生成JWT token，key：{}", key);
         GlobalBouncyCastleProvider.setUseBouncyCastle(false);
         DateTime now = DateTime.now();
@@ -41,7 +51,7 @@ public class Jwt {
         return token;
     }
 
-    public static boolean validate(String token) {
+    public boolean validate(String token) {
         LOG.info("开始JWT token校验，token：{}", token);
         GlobalBouncyCastleProvider.setUseBouncyCastle(false);
         JWT jwt = JWTUtil.parseToken(token).setKey(key.getBytes());
@@ -50,7 +60,7 @@ public class Jwt {
         return validate;
     }
 
-    public static JSONObject getJSONObject(String token) {
+    public JSONObject decode(String token) {
         GlobalBouncyCastleProvider.setUseBouncyCastle(false);
         JWT jwt = JWTUtil.parseToken(token).setKey(key.getBytes());
         JSONObject payloads = jwt.getPayloads();
@@ -62,10 +72,11 @@ public class Jwt {
     }
 
     public static void main(String[] args) {
-        Jwt.createToken(123666L);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyMzY2NiwibmJmIjoxNzA1NDExMDY4LCJpZCI6MTIzNjY2LCJleHAiOjE3MDU1MjE1OTksInR5cGUiOiJ1c2VyIiwiaWF0IjoxNzA1NDExMDY4LCJwbGF0Zm9ybSI6IndlYiJ9.CQRuvsTRA28xeu0wnfhgn_Tviadq5D2rq0xll2TuYTY";
-        validate(token);
-        getJSONObject(token);
+        Jwt j = new Jwt();
+        j.setKey("born2code");
+        j.encode(123666L);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyMzY2NiwibmJmIjoxNzA1NDc2NTExLCJpZCI6MTIzNjY2LCJleHAiOjE3MDU2MDc5OTksInR5cGUiOiJ1c2VyIiwiaWF0IjoxNzA1NDc2NTExLCJwbGF0Zm9ybSI6IndlYiJ9.TSV0EX-JIMs8NciDLHApgK3onHjy93NyzQMJT-QNBzI";
+        j.validate(token);
+        j.decode(token);
     }
-
 }

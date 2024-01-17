@@ -1,6 +1,6 @@
 package com.aitschool.user.User.response;
 
-import com.aitschool.user.User.User;
+import com.aitschool.user.User.model.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.util.Date;

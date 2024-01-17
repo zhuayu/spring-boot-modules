@@ -1,4 +1,4 @@
-package com.aitschool.user.User;
+package com.aitschool.user.User.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

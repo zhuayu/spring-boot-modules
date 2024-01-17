@@ -1,10 +1,10 @@
-package com.aitschool.user.User.controller;
+package com.aitschool.user.User.controller.web;
 
 import com.aitschool.common.exception.BusinessException;
 import com.aitschool.common.response.CommonResponse;
 import com.aitschool.common.util.Jwt;
-import com.aitschool.user.User.User;
-import com.aitschool.user.User.UserRepository;
+import com.aitschool.user.User.model.User;
+import com.aitschool.user.User.repository.UserRepository;
 import com.aitschool.user.User.request.PhoneSmsCheckRequest;
 import com.aitschool.user.User.request.PhoneSmsCodeRequest;
 import com.aitschool.user.User.response.UserIndexResponse;
@@ -17,8 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path="/phone")
+@RequestMapping(path="/web/phone")
 public class PhoneController {
+
+    @Autowired
+    private Jwt jwt;
 
     @Autowired
     private PhoneService phoneService;
@@ -50,6 +53,7 @@ public class PhoneController {
         String code = req.getCode();
         String phoneNumber = req.getPhone();
         String key = req.getKey();
+
         boolean isValid = phoneService.checkSmsCode(code, phoneNumber, key);
         if(!isValid) {
             return new CommonResponse<>(1, "验证失败", null);
@@ -62,7 +66,7 @@ public class PhoneController {
         }
 
         // 生成JWT token
-        String token = Jwt.createToken(user.getId(), "web", false);
+        String token = jwt.encode(user.getId(), "web", false);
 
         // 构建包含用户信息和token的Map
         Map<String, Object> responseMap = new HashMap<>();

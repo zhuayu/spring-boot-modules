@@ -1,4 +1,4 @@
-package com.aitschool.user.User;
+package com.aitschool.user.User.controller.admin;
 
 import com.aitschool.common.response.CommonResponse;
 import com.aitschool.common.response.PageJPAResponse;
@@ -12,17 +12,17 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping(path="/api/v1")
+@RequestMapping(path="/admin/users")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(path="users")
+    @PostMapping(path="")
     public @ResponseBody CommonResponse<Object> store(@RequestBody @Valid UserStoreRequest req) {
         return userService.store(req);
     }
 
-    @GetMapping(path = "users")
+    @GetMapping(path="")
     @ResponseBody
     public CommonResponse<PageJPAResponse<UserIndexResponse>> index(Pageable request) {
         return userService.index(request);
