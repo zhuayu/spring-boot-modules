@@ -1,4 +1,4 @@
-package com.aitschool.user.User.controller.web;
+package com.aitschool.user.User.controller;
 
 import com.aitschool.common.exception.BusinessException;
 import com.aitschool.common.response.CommonResponse;
@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path="/web/phone")
-public class PhoneController {
+@RequestMapping(path="/sms")
+public class SMSController {
 
     @Autowired
     private Jwt jwt;
@@ -27,16 +27,16 @@ public class PhoneController {
     private PhoneService phoneService;
     @Autowired
     private UserRepository userRepository;
-    @GetMapping("/sms/code")
+    @GetMapping("/code")
     @ResponseBody
-    public CommonResponse<Object> getSmsCode(@Valid PhoneSmsCodeRequest req) {
+    public CommonResponse<Object> smsCode(@Valid PhoneSmsCodeRequest req) {
         Map<String, String> result = phoneService.getSmsCode(req.getPhone(), "PHONE");
         return new CommonResponse<>(0, "验证码获取成功 🙆", result);
     }
 
-    @GetMapping("/sms/check")
+    @GetMapping("/check")
     @ResponseBody
-    public  CommonResponse<Object> checkSmsCode(@Valid PhoneSmsCheckRequest req) {
+    public  CommonResponse<Object> smsCheck(@Valid PhoneSmsCheckRequest req) {
         String code = req.getCode();
         String phoneNumber = req.getPhone();
         String key = req.getKey();
@@ -47,9 +47,9 @@ public class PhoneController {
     }
 
 
-    @GetMapping("/sms/login")
+    @GetMapping("/login")
     @ResponseBody
-    public  CommonResponse<Object> loginByPhone(@Valid PhoneSmsCheckRequest req) {
+    public  CommonResponse<Object> smsLogin(@Valid PhoneSmsCheckRequest req) {
         String code = req.getCode();
         String phoneNumber = req.getPhone();
         String key = req.getKey();
@@ -74,6 +74,4 @@ public class PhoneController {
         responseMap.put("token", token);
         return new CommonResponse<>(responseMap);
     }
-
-
 }
