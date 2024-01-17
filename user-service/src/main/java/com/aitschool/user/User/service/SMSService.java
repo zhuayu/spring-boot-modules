@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class PhoneService {
+public class SMSService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;

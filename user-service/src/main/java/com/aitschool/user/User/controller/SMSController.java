@@ -8,7 +8,7 @@ import com.aitschool.user.User.repository.UserRepository;
 import com.aitschool.user.User.request.PhoneSmsCheckRequest;
 import com.aitschool.user.User.request.PhoneSmsCodeRequest;
 import com.aitschool.user.User.response.UserIndexResponse;
-import com.aitschool.user.User.service.PhoneService;
+import com.aitschool.user.User.service.SMSService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +24,13 @@ public class SMSController {
     private Jwt jwt;
 
     @Autowired
-    private PhoneService phoneService;
+    private SMSService smsService;
     @Autowired
     private UserRepository userRepository;
     @GetMapping("/code")
     @ResponseBody
     public CommonResponse<Object> smsCode(@Valid PhoneSmsCodeRequest req) {
-        Map<String, String> result = phoneService.getSmsCode(req.getPhone(), "PHONE");
+        Map<String, String> result = smsService.getSmsCode(req.getPhone(), "PHONE");
         return new CommonResponse<>(0, "验证码获取成功 🙆", result);
     }
 
@@ -40,7 +40,7 @@ public class SMSController {
         String code = req.getCode();
         String phoneNumber = req.getPhone();
         String key = req.getKey();
-        boolean isValid = phoneService.checkSmsCode(code, phoneNumber, key);
+        boolean isValid = smsService.checkSmsCode(code, phoneNumber, key);
         int resultCode = isValid ? 0 : 1;
         String message = isValid ? "验证成功" : "验证失败";
         return new CommonResponse<>(resultCode, message, isValid);
@@ -54,7 +54,7 @@ public class SMSController {
         String phoneNumber = req.getPhone();
         String key = req.getKey();
 
-        boolean isValid = phoneService.checkSmsCode(code, phoneNumber, key);
+        boolean isValid = smsService.checkSmsCode(code, phoneNumber, key);
         if(!isValid) {
             return new CommonResponse<>(1, "验证失败", null);
         }
