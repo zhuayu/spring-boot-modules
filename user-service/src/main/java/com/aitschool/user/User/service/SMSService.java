@@ -24,11 +24,9 @@ public class SMSService {
         Map<String, String> result = new HashMap<>();
         result.put("code", randomCode);
         result.put("key", redisKey);
-
-
-
-
-
+        // todo 对接第三方短信服务 （ 晚点和阿里云的 OSS、VOD、SMS 一起来做 ）
+        // https://next.api.aliyun.com/api/Dysmsapi/2017-05-25/SendSms?tab=DEMO&lang=JAVA
+        // https://next.api.aliyun.com/api-tools/sdk/Dysmsapi?version=2017-05-25&language=java-tea&tab=primer-doc
         return result;
     }
 
