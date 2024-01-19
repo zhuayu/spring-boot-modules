@@ -1,7 +1,6 @@
 package com.aitschool.user.User.service;
 
 import com.aitschool.common.exception.BusinessException;
-import com.aitschool.common.response.CommonResponse;
 import com.aitschool.common.response.PageJPAResponse;
 import com.aitschool.user.User.model.User;
 import com.aitschool.user.User.repository.UserRepository;
@@ -18,7 +17,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public CommonResponse<Object> store(UserStoreRequest req) {
+    public Object store(UserStoreRequest req) {
         if (userRepository.existsByPhone(req.getPhone())) {
             throw new BusinessException("手机号已注册了 ！ 🙅");
         }
@@ -29,19 +28,19 @@ public class UserService {
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("id", savedUser.getId());
 
-        return new CommonResponse<>(0, "用户添加成功 🙆", responseData);
+        return responseData;
     }
 
-    public CommonResponse<PageJPAResponse<UserIndexResponse>> index(Pageable request) {
+    public PageJPAResponse index(Pageable request) {
         Page<UserIndexResponse> userIndexResponses = userRepository.findAll(request)
                 .map(UserIndexResponse::fromUser);
-        return new CommonResponse<>(PageJPAResponse.of(
+        return PageJPAResponse.of(
                 userIndexResponses.getContent(),
                 userIndexResponses.getTotalElements(),
                 userIndexResponses.getNumberOfElements(),
                 userIndexResponses.getSize(),
                 userIndexResponses.getNumber(),
                 userIndexResponses.getTotalPages()
-        ));
+        );
     }
 }

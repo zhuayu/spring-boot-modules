@@ -1,9 +1,7 @@
 package com.aitschool.user.User.controller.admin;
 
 import com.aitschool.common.response.CommonResponse;
-import com.aitschool.common.response.PageJPAResponse;
 import com.aitschool.user.User.request.UserStoreRequest;
-import com.aitschool.user.User.response.UserIndexResponse;
 import com.aitschool.user.User.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +17,12 @@ public class AdminUserController {
 
     @PostMapping(path="")
     public @ResponseBody CommonResponse<Object> store(@RequestBody @Valid UserStoreRequest req) {
-        return userService.store(req);
+        return new CommonResponse<>(userService.store(req));
     }
 
     @GetMapping(path="")
     @ResponseBody
-    public CommonResponse<PageJPAResponse<UserIndexResponse>> index(Pageable request) {
-        return userService.index(request);
+    public CommonResponse<Object> index(Pageable request) {
+        return new CommonResponse<>(userService.index(request));
     }
 }
