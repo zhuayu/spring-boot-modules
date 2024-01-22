@@ -1,4 +1,4 @@
-package com.aitschool.user.Rabc.respository;
+package com.aitschool.user.Rabc.repository;
 
 import com.aitschool.user.Rabc.model.Administrator;
 
@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
+
+import java.util.Optional;
 
 public interface AdministratorRepository extends PagingAndSortingRepository<Administrator, Long>, JpaSpecificationExecutor<Administrator> {
 
@@ -20,5 +22,6 @@ public interface AdministratorRepository extends PagingAndSortingRepository<Admi
 
     Administrator findById(Long administratorId);
 
+    Optional<Administrator> findByUserIdAndRolesId(Long userId, Long id);
 }
 

@@ -2,18 +2,15 @@ package com.aitschool.user.Rabc.controller.admin;
 
 import com.aitschool.common.exception.BusinessException;
 import com.aitschool.common.response.CommonResponse;
-import com.aitschool.user.Rabc.model.Administrator;
 import com.aitschool.user.Rabc.request.AdministratorIndexRequest;
 import com.aitschool.user.Rabc.request.AdministratorStoreRequest;
 import com.aitschool.user.Rabc.request.AdministratorUpdateRequest;
-import com.aitschool.user.Rabc.respository.AdministratorRepository;
+import com.aitschool.user.Rabc.repository.AdministratorRepository;
 import com.aitschool.user.Rabc.service.AdministratorService;
 import com.aitschool.user.User.model.User;
 import com.aitschool.user.User.repository.UserRepository;
 
 import jakarta.validation.Valid;
-
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -35,14 +32,14 @@ public class AdminRabcController {
     // 管理者列表
     @GetMapping(path="/administrators")
     @ResponseBody
-    public CommonResponse<Object> administratorIndex(AdministratorIndexRequest administratorIndexRequest, Pageable pageRequest) {
+    public CommonResponse<Object> index(AdministratorIndexRequest administratorIndexRequest, Pageable pageRequest) {
         return new CommonResponse<>(administratorService.index(administratorIndexRequest, pageRequest));
     }
 
     // 新建管理者
     @PostMapping(path="/administrators")
     @ResponseBody
-    public CommonResponse<Object> administratorStore(@RequestBody @Valid AdministratorStoreRequest req) {
+    public CommonResponse<Object> store(@RequestBody @Valid AdministratorStoreRequest req) {
         // 检查是否注册过
         User user = userRepository.findByPhone(req.getPhone());
         if (user == null) {
@@ -61,7 +58,7 @@ public class AdminRabcController {
     // 修改管理者
     @PutMapping(path="/administrators/{id}")
     @ResponseBody
-    public CommonResponse<Object> administratorUpdate(@PathVariable Long id, @RequestBody @Valid AdministratorUpdateRequest req) {
+    public CommonResponse<Object> update(@PathVariable Long id, @RequestBody @Valid AdministratorUpdateRequest req) {
         Long[] roleIds = req.getRole_ids();
         return new CommonResponse<>(administratorService.update(id, roleIds));
     }
@@ -69,7 +66,7 @@ public class AdminRabcController {
     // 删除管理者
     @DeleteMapping(path = "/administrators/{id}")
     @ResponseBody
-    public CommonResponse<Object> administratorDelete(@PathVariable Long id) {
+    public CommonResponse<Object> delete(@PathVariable Long id) {
         administratorService.delete(id);
         return new CommonResponse<>();
     }
