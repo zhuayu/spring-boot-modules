@@ -31,7 +31,7 @@ public class UserService {
         return responseData;
     }
 
-    public PageJPAResponse index(Pageable request) {
+    public PageJPAResponse<UserIndexResponse> index(Pageable request) {
         Page<UserIndexResponse> userIndexResponses = userRepository.findAll(request)
                 .map(UserIndexResponse::fromUser);
         return PageJPAResponse.of(

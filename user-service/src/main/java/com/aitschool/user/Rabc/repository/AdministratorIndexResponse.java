@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 public class AdministratorIndexResponse {
     private long id;
+    private long user_id;
     private String phone;
     private String nickname;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
@@ -24,7 +25,8 @@ public class AdministratorIndexResponse {
     public static AdministratorIndexResponse format(Administrator administrator) {
         AdministratorIndexResponse response = new AdministratorIndexResponse();
         User user = administrator.getUser();
-        response.setId(user.getId());
+        response.setId(administrator.getId());
+        response.setUser_id(user.getId());
         response.setPhone(user.getPhone());
         response.setNickname(user.getNickname());
         response.setCreated_at(administrator.getCreatedAt());

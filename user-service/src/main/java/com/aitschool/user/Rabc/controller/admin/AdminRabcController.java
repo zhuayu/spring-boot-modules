@@ -1,8 +1,20 @@
 package com.aitschool.user.Rabc.controller.admin;
 
+import com.aitschool.common.exception.BusinessException;
 import com.aitschool.common.response.CommonResponse;
+import com.aitschool.user.Rabc.model.Administrator;
 import com.aitschool.user.Rabc.request.AdministratorIndexRequest;
+import com.aitschool.user.Rabc.request.AdministratorStoreRequest;
+import com.aitschool.user.Rabc.request.AdministratorUpdateRequest;
+import com.aitschool.user.Rabc.respository.AdministratorRepository;
 import com.aitschool.user.Rabc.service.AdministratorService;
+import com.aitschool.user.User.model.User;
+import com.aitschool.user.User.repository.UserRepository;
+
+import jakarta.validation.Valid;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -14,28 +26,51 @@ public class AdminRabcController {
     @Autowired
     private AdministratorService administratorService;
 
-    // 管理者
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AdministratorRepository administratorRepository;
+
+    // 管理者列表
     @GetMapping(path="/administrators")
     @ResponseBody
     public CommonResponse<Object> administratorIndex(AdministratorIndexRequest administratorIndexRequest, Pageable pageRequest) {
-        return new CommonResponse<>(administratorService.getAdministratorList(administratorIndexRequest, pageRequest));
+        return new CommonResponse<>(administratorService.index(administratorIndexRequest, pageRequest));
     }
 
+    // 新建管理者
     @PostMapping(path="/administrators")
     @ResponseBody
-    public CommonResponse<Object> administratorStore() {
-        return new CommonResponse<>(null);
+    public CommonResponse<Object> administratorStore(@RequestBody @Valid AdministratorStoreRequest req) {
+        // 检查是否注册过
+        User user = userRepository.findByPhone(req.getPhone());
+        if (user == null) {
+            throw new BusinessException("手机号未注册了 ！ 🙅");
+        }
+        Long userId = user.getId();
+        Long[] roleIds = req.getRole_ids();
+        if (administratorRepository.existsByUserId(userId)) {
+            throw new BusinessException("用户已经是管理员了！ 🙅");
+        }
+        // 新增用户
+        administratorService.store(userId, roleIds);
+        return new CommonResponse<>(userId);
     }
 
-    @GetMapping(path="/administrators/{id}")
-    @ResponseBody
-    public CommonResponse<Object> administratorShow() {
-        return new CommonResponse<>(null);
-    }
-
+    // 修改管理者
     @PutMapping(path="/administrators/{id}")
     @ResponseBody
-    public CommonResponse<Object> administratorUpdate() {
+    public CommonResponse<Object> administratorUpdate(@PathVariable Long id, @RequestBody @Valid AdministratorUpdateRequest req) {
+        Long[] roleIds = req.getRole_ids();
+        return new CommonResponse<>(administratorService.update(id, roleIds));
+    }
+
+    // 删除管理者
+    @DeleteMapping(path = "/administrators/{id}")
+    @ResponseBody
+    public CommonResponse<Object> administratorDelete(@PathVariable Long id) {
+        administratorRepository.deleteById(id);
         return new CommonResponse<>(null);
     }
 

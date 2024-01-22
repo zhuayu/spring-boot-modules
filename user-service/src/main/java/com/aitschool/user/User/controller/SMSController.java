@@ -27,6 +27,7 @@ public class SMSController {
     private SMSService smsService;
     @Autowired
     private UserRepository userRepository;
+
     @GetMapping("/code")
     @ResponseBody
     public CommonResponse<Object> smsCode(@Valid PhoneSmsCodeRequest req) {
