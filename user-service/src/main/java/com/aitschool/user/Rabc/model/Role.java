@@ -1,9 +1,11 @@
 package com.aitschool.user.Rabc.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -29,4 +31,8 @@ public class Role {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @ManyToMany(mappedBy = "roles")
+    @JsonBackReference
+    private List<Administrator> administrators;
 }

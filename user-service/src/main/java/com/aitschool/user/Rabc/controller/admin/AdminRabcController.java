@@ -70,8 +70,8 @@ public class AdminRabcController {
     @DeleteMapping(path = "/administrators/{id}")
     @ResponseBody
     public CommonResponse<Object> administratorDelete(@PathVariable Long id) {
-        administratorRepository.deleteById(id);
-        return new CommonResponse<>(null);
+        administratorService.delete(id);
+        return new CommonResponse<>();
     }
 
 

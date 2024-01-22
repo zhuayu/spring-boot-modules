@@ -1,13 +1,10 @@
-package com.aitschool.user.Rabc.repository;
+package com.aitschool.user.Rabc.response;
 
 import com.aitschool.user.Rabc.model.Administrator;
-import com.aitschool.user.Rabc.model.Role;
-import com.aitschool.user.Rabc.model.RoleAdministrator;
 import com.aitschool.user.User.model.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,12 +28,9 @@ public class AdministratorIndexResponse {
         response.setNickname(user.getNickname());
         response.setCreated_at(administrator.getCreatedAt());
 
-        List<RoleResponse> roleResponses = new ArrayList<>();
-        for (RoleAdministrator roleAdministrator : administrator.getRoles()) {
-            Role role = roleAdministrator.getRole();
-            RoleResponse roleResponse = new RoleResponse(role.getId(), role.getName());
-            roleResponses.add(roleResponse);
-        }
+        List<RoleResponse> roleResponses = administrator.getRoles().stream()
+                .map(role -> new RoleResponse(role.getId(), role.getName()))
+                .toList();
         response.setRoles(roleResponses);
         return response;
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,11 +36,16 @@ public class Administrator {
         }
     }
 
-    @ManyToOne // 表示多对一关系
+    @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
-    @OneToMany(mappedBy = "administrator")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "rabc_role_administrators",
+            joinColumns = @JoinColumn(name = "administrator_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     @JsonManagedReference
-    private List<RoleAdministrator> roles;
+    private List<Role> roles = new ArrayList<>();
 }

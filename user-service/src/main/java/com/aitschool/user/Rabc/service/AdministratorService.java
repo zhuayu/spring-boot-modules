@@ -4,10 +4,10 @@ import com.aitschool.common.exception.BusinessException;
 import com.aitschool.common.response.PageJPAResponse;
 import com.aitschool.user.Rabc.model.Administrator;
 import com.aitschool.user.Rabc.model.Role;
-import com.aitschool.user.Rabc.model.RoleAdministrator;
-import com.aitschool.user.Rabc.repository.AdministratorIndexResponse;
+import com.aitschool.user.Rabc.response.AdministratorIndexResponse;
 import com.aitschool.user.Rabc.request.AdministratorIndexRequest;
 import com.aitschool.user.Rabc.respository.AdministratorRepository;
+import com.aitschool.user.Rabc.respository.RoleRepository;
 import com.aitschool.user.User.model.User;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
@@ -23,11 +23,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class AdministratorService {
 
     @Autowired
     private AdministratorRepository administratorRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     // 获取管理员列表
     public PageJPAResponse<AdministratorIndexResponse> index(AdministratorIndexRequest req, Pageable pageRequest) {
@@ -43,9 +45,8 @@ public class AdministratorService {
             }
 
             if(req.getRole_id() != null) {
-                Join<Administrator, RoleAdministrator> roleJoin = root.join("roles", JoinType.LEFT);
-                Join<RoleAdministrator, Role> roleTableJoin = roleJoin.join("role", JoinType.LEFT);
-                predicates.add(criteriaBuilder.equal(roleTableJoin.get("id"), req.getRole_id()));
+                Join<Administrator, Role> roleJoin = root.join("roles", JoinType.LEFT);
+                predicates.add(criteriaBuilder.equal(roleJoin.get("id"), req.getRole_id()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -66,20 +67,13 @@ public class AdministratorService {
     public void store(Long userId, Long[] roleIds) {
         Administrator administrator = new Administrator();
         administrator.setUserId(userId);
-        List<RoleAdministrator> roles = new ArrayList<>();
-        for (Long roleId : roleIds) {
-            RoleAdministrator roleAdministrator = new RoleAdministrator();
-            Role role = new Role();
-            role.setId(roleId);
-            roleAdministrator.setRole(role);
-            roleAdministrator.setAdministrator(administrator);
-            roles.add(roleAdministrator);
-        }
-        administrator.setRoles(roles);
+        List<Role> newRoles = roleRepository.findAllById(List.of(roleIds));
+        administrator.getRoles().addAll(newRoles);
         administratorRepository.save(administrator);
     }
 
     // 更新管理员 roleIds [2,3]
+    @Transactional
     public Administrator update(Long administratorId, Long[] roleIds) {
         Administrator administrator = administratorRepository.findById(administratorId);
         if(administrator == null) {
@@ -88,32 +82,36 @@ public class AdministratorService {
 
         // 获取现有角色的ID集合[1,2]
         Set<Long> existingRoleIds = administrator.getRoles().stream()
-                .map(roleAdministrator -> roleAdministrator.getRole().getId())
+                .map(role -> role.getId())
                 .collect(Collectors.toSet());
 
         // 删除不再拥有的角色[1]
         Set<Long> rmRoleIds = existingRoleIds.stream()
                 .filter(id -> !Arrays.asList(roleIds).contains(id))
                 .collect(Collectors.toSet());
+        administrator.getRoles().removeIf(role ->
+                rmRoleIds.contains(role.getId()));
 
-        // 删除不再拥有的角色对应的关联
-        administrator.getRoles().removeIf(roleAdministrator ->
-                rmRoleIds.contains(roleAdministrator.getRole().getId()));
+        // 需要新增的角色
+        Set<Long> newRoleIds = Arrays.asList(roleIds).stream()
+                .filter(id -> !existingRoleIds.contains(id))
+                .collect(Collectors.toSet());
+        List<Role> newRoles = roleRepository.findAllById(newRoleIds);
 
-        // 关联新角色[2,3] 3
-        List<RoleAdministrator> roles = Arrays.stream(roleIds)
-                .filter(roleId -> !existingRoleIds.contains(roleId))
-                .map(roleId -> {
-                    RoleAdministrator roleAdministrator = new RoleAdministrator();
-                    Role role = new Role();
-                    role.setId(roleId);
-                    roleAdministrator.setRole(role);
-                    roleAdministrator.setAdministrator(administrator);
-                    return roleAdministrator;
-                })
-                .toList();
-        administrator.getRoles().addAll(roles);
+        administrator.getRoles().addAll(newRoles);
         administratorRepository.save(administrator);
         return administrator;
+    }
+
+    @Transactional
+    public void delete(Long administratorId) {
+        Administrator administrator = administratorRepository.findById(administratorId);
+        if(administrator == null) {
+            throw new BusinessException("找不到管理员 🙅");
+        }
+        // 删除管理员与角色的关联
+        administrator.getRoles().clear();
+        // 删除管理员
+        administratorRepository.deleteById(administratorId);
     }
 }
