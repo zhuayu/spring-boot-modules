@@ -66,7 +66,7 @@ public class AdministratorCommand implements CommandLineRunner {
                 return administratorRepository.save(newAdministrator);
             });
             Set<Long> existingRoleIds = administrator.getRoles().stream()
-                    .map(role -> role.getId())
+                    .map(Role::getId)
                     .collect(Collectors.toSet());
 
             if(!existingRoleIds.contains(superAdminRole.getId())) {

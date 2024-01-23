@@ -85,7 +85,7 @@ public class RoleService {
         List<Long> permissionIds = List.of(req.getPermission_ids());
         // 获取现有集合
         Set<Long> existingIds = role.getPermissions().stream()
-                .map(item -> item.getId())
+                .map(Permission::getId)
                 .collect(Collectors.toSet());
 
         // 删除没有的集合
