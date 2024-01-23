@@ -2,11 +2,10 @@ package com.aitschool.user.Rabc.controller.admin;
 
 import com.aitschool.common.exception.BusinessException;
 import com.aitschool.common.response.CommonResponse;
-import com.aitschool.user.Rabc.request.AdministratorIndexRequest;
-import com.aitschool.user.Rabc.request.AdministratorStoreRequest;
-import com.aitschool.user.Rabc.request.AdministratorUpdateRequest;
+import com.aitschool.user.Rabc.request.*;
 import com.aitschool.user.Rabc.repository.AdministratorRepository;
 import com.aitschool.user.Rabc.service.AdministratorService;
+import com.aitschool.user.Rabc.service.RoleService;
 import com.aitschool.user.User.model.User;
 import com.aitschool.user.User.repository.UserRepository;
 
@@ -28,6 +27,9 @@ public class AdminRabcController {
 
     @Autowired
     private AdministratorRepository administratorRepository;
+
+    @Autowired
+    private RoleService roleService;
 
     // 管理者列表
     @GetMapping(path="/administrators")
@@ -75,25 +77,32 @@ public class AdminRabcController {
     // 角色
     @GetMapping(path="/roles")
     @ResponseBody
-    public CommonResponse<Object> roleIndex(Pageable request) {
-        return new CommonResponse<>(null);
+    public CommonResponse<Object> roleIndex(RoleIndexRequest req, Pageable pageRequest) {
+        return new CommonResponse<>(roleService.index(req, pageRequest));
     }
 
     @PostMapping(path="/roles")
     @ResponseBody
-    public CommonResponse<Object> roleStore() {
-        return new CommonResponse<>(null);
-    }
-
-    @PutMapping(path="/roles/{id}")
-    @ResponseBody
-    public CommonResponse<Object> roleUpdate() {
-        return new CommonResponse<>(null);
+    public CommonResponse<Object> roleStore(@RequestBody @Valid RoleStoreRequest req) {
+        return new CommonResponse<>(roleService.store(req));
     }
 
     @GetMapping(path="/roles/{id}")
     @ResponseBody
-    public CommonResponse<Object> roleShow() {
+    public CommonResponse<Object> roleShow(@PathVariable Long id) {
+        return new CommonResponse<>(roleService.show(id));
+    }
+
+    @PutMapping(path="/roles/{id}")
+    @ResponseBody
+    public CommonResponse<Object> roleUpdate(@PathVariable Long id, @RequestBody @Valid RoleStoreRequest req) {
+        return new CommonResponse<>(roleService.update(id, req));
+    }
+
+    @DeleteMapping(path="/roles/{id}")
+    @ResponseBody
+    public CommonResponse<Object> roleUpdate(@PathVariable Long id) {
+        roleService.delete(id);
         return new CommonResponse<>(null);
     }
 

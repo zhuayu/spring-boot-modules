@@ -33,7 +33,7 @@ public class AdministratorCommand implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        if (args.length > 0 && "setupAdmin".equals(args[0])) {
+        if (args.length > 0 && "setupAdminCommand".equals(args[0])) {
             // 从命令行参数中获取 userId，如果没有提供，默认为1
             Long userId = args.length > 1 ? Long.parseLong(args[1]) : 1L;
             // 执行设置管理员和超级管理员角色的逻辑

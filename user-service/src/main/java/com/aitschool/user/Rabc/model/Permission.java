@@ -1,9 +1,13 @@
 package com.aitschool.user.Rabc.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,8 +28,11 @@ public class Permission {
 
     private Long sort;
 
-    @Column(name = "group_id", nullable = false)
-    private int groupId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", nullable = false)
+    @JsonBackReference
+    @JsonIgnore
+    private PermissionGroup group;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
@@ -34,4 +41,5 @@ public class Permission {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
+
 }

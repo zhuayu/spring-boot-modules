@@ -1,9 +1,11 @@
 package com.aitschool.user.Rabc.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,4 +37,13 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     @JsonBackReference
     private List<Administrator> administrators;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "rabc_permission_role",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    @JsonIgnore
+    private List<Permission> permissions = new ArrayList<>();
 }

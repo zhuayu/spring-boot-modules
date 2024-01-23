@@ -11,7 +11,12 @@ public interface RoleRepository  extends PagingAndSortingRepository<Role, Long>,
 
     List<Role> findAllById(Iterable<Long> ids);
 
+    Role findAllById(Long id);
+
     <T> Optional<T> findByName(String str);
 
     Role save(Role newRole);
+
+
+    void deleteById(Long id);
 }

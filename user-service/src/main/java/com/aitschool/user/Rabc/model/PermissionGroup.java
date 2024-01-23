@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -29,4 +30,7 @@ public class PermissionGroup {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    private List<Permission> permissions;
 }
