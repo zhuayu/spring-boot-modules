@@ -18,10 +18,12 @@ public interface AdministratorRepository extends PagingAndSortingRepository<Admi
 
     void deleteById(Long id);
 
-    void save(Administrator administrator);
+    Administrator save(Administrator administrator);
 
     Administrator findById(Long administratorId);
 
     Optional<Administrator> findByUserIdAndRolesId(Long userId, Long id);
+
+    Optional<Administrator> findByUserId(Long userId);
 }
 
