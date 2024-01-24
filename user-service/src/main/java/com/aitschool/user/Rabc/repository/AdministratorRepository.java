@@ -22,8 +22,6 @@ public interface AdministratorRepository extends PagingAndSortingRepository<Admi
 
     Administrator findById(Long administratorId);
 
-    Optional<Administrator> findByUserIdAndRolesId(Long userId, Long id);
-
     Optional<Administrator> findByUserId(Long userId);
 }
 
