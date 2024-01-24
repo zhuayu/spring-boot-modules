@@ -3,6 +3,7 @@ package com.aitschool.user.Rabc.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class PermissionGroup {
     @Column(name = "display_name", nullable = false)
     private String displayName;
 
-    private Long sort;
+    private Integer sort;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
@@ -31,6 +32,6 @@ public class PermissionGroup {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<Permission> permissions;
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Permission> permissions = new ArrayList<>();
 }

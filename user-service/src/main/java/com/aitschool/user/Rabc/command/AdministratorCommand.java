@@ -29,7 +29,6 @@ public class AdministratorCommand implements CommandLineRunner {
     private AdministratorRepository administratorRepository;
 
 
-
     @Override
     @Transactional
     public void run(String... args) throws Exception {
@@ -45,10 +44,10 @@ public class AdministratorCommand implements CommandLineRunner {
 
     public void execute(Long userId) {
         // 检查是否存在名为"超级管理员"的角色，如果不存在，则创建
-        Optional<Role> superAdminRoleOptional = roleRepository.findByName("超级管理员");
+        Optional<Role> superAdminRoleOptional = roleRepository.findByName("super-administrator");
         Role superAdminRole = superAdminRoleOptional.orElseGet(() -> {
             Role newRole = new Role();
-            newRole.setName("超级管理员");
+            newRole.setName("super-administrator");
             newRole.setDisplayName("超级管理员");
             newRole.setDescription("拥有所有权限的管理员");
             newRole.setCreatedAt(new Date());

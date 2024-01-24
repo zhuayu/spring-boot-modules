@@ -13,7 +13,7 @@ public interface RoleRepository  extends PagingAndSortingRepository<Role, Long>,
 
     Role findAllById(Long id);
 
-    <T> Optional<T> findByName(String str);
+    Optional<Role>  findByName(String str);
 
     Role save(Role newRole);
 

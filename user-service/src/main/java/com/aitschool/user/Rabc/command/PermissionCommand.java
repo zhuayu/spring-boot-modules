@@ -1,11 +1,16 @@
 package com.aitschool.user.Rabc.command;
 
+import com.aitschool.user.Rabc.service.PermissionService;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PermissionCommand implements CommandLineRunner {
+
+    @Autowired
+    PermissionService permissionService;
 
     @Override
     @Transactional
@@ -16,6 +21,6 @@ public class PermissionCommand implements CommandLineRunner {
     }
 
     public void execute() {
-
+        permissionService.syncDatabaseWithConstants();
     }
 }
